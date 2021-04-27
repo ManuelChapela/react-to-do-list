@@ -1,0 +1,75 @@
+/* Main styles */
+
+
+
+.true{
+    padding: 30px;
+    text-decoration: line-through;
+}
+
+.false{
+    padding: 30px;
+}
+
+.editLine{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    align-items: center;
+}
+
+.btn{
+    width: 70px;
+    height: 18px;
+    margin: 5px;
+    padding: 5px;
+    border: 1.2px solid black;
+}
+
+.btn:hover{
+    background-color: rgb(241, 241, 241);
+}
+
+.btn:active{
+    border: 1.2px solid black;
+    box-shadow: 0 0 10px -2px rgb(170, 170, 170);
+}
+
+.editInput{
+    width: 240px;
+    height: 26px;
+    border: 1.2px solid black;
+    margin: 5px;
+}
+
+.done{
+    width: 15px;
+    height: 15px;
+    border: 1.2px solid black;
+    border-radius: none;
+}
+.done:focus{
+    outline: none;
+}
+
+
+.alta{
+    background-color: rgba(220, 76, 76, 0.8); 
+    padding: 30px;
+}
+
+.media{
+    background-color: rgba(220, 218, 76, 0.8); 
+    padding: 30px;
+
+}
+
+.baja{
+    background-color: rgba(115, 174, 115, 0.8); 
+    padding: 30px;
+}
+
+.ninguna{
+    padding: 30px;
+}
+

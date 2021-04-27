@@ -1,0 +1,23 @@
+/* Main styles */
+
+
+.btn{
+    width: 100px;
+    height: 18px;
+    margin: 5px;
+    padding: 5px;
+    border: 1.2px solid black;
+}
+
+.editInput{
+    width: 240px;
+    height: 26px;
+    border: 1.2px solid black;
+    margin: 5px;
+}
+
+.titleLine{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
