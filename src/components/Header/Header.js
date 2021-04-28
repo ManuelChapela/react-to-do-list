@@ -2,20 +2,16 @@ import React from 'react'
 import './Header.css'
 import logo from '../../assets/img/logo_2.gif'
 
-class Header extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  
-  render() {
+
+const Header = () => {
+
     return (
       <header>
-        <h1>{this.props.brand}</h1>
         <img className="logo" src={logo} alt="Logo de la empresa" />
-        {/* <Nav /> */}
+      {/* <Nav /> */}
       </header>
     );
-  }
+  
 }
 
 export default Header;

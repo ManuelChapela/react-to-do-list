@@ -2,28 +2,38 @@ import './App.css';
 import Header from './components/Header/Header.js';
 import Main from './components/Main/Main.js';
 import Footer from './components/Footer/Footer.js';
+import Nav from './components/Nav/Nav';
+import Login from './components/Login/Login';
+import Home from './components/Home/Home';
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
 
 function App() {
-  // const [logged, setLogged] = useState(false)
-  // const toggleLog = => {
-  //   setLogged(!logged)
-  // }
-
 
   let myBrand = "FyF"; // Hardcoded
-
-  // const user = { name: 'Jacinto', loggedIn: true }
 
   /* JSX */
   return (
     <div className="App">
-      {/* <UserProvider value={user}>  */}
         <Header myBrand={myBrand} />
-        <Main />
-        <Footer brand={myBrand} />
-        {/* <Login /> */}
-      {/* </UserProvider> */}
+        
+        <Router>
+        <Nav />
+        <Switch>
+          <Route  exact path="/" component={Home}> 
+          {/* Al haber solo un componente se puede poner como component={nombreComp} */}
+          </Route>
+          <Route  path="/login">
+            <Login />
+          </Route>
+          <Route  path="/list">
+            <Main  />
+          </Route>
+        </Switch>
+      </Router>
 
+        <Footer brand={myBrand} />
     </div>
   );
 }

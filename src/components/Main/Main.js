@@ -1,129 +1,120 @@
 import React from 'react';
 import './Main.css';
-//import spinner from './spinner.gif';
-
 import Post from '../Post/Post';
 import Form from '../Form/Form';
-// import Search from '../Search/Search'
 import getPosts from '../../data/dataProvider';
+import { useState, useEffect } from 'react';
 
 
+const Main = ({ user}) => {
+  const [posts, setPosts] = useState([]);
+  const [usuario, setUsuario] = useState(user || "");
+  const [mode, setMode] = useState(0);
+  const [selected, setSelected] = useState(-1);
+  const [search, setSearch] = useState("");
 
-// ----------- STATE ITNITIAL
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      posts: [],
-      user: this.props.user || "",
-      limit: 10,
-      mode: 0,
-      selected: -1,
-      search: ""
-    }
+  
+  const addPost = (title) => { 
+    setPosts( [...posts, { title,  check: false, priority: "baja"} ])
+    setMode(0)
+    console.log(posts.priority);
   }
   
-  addPost = (title) => { 
-    this.setState({
-      posts: [...this.state.posts, { title,  check: false, priority: "baja"}],
-      mode: 0
-    });
-  }
-
-  async componentDidMount() {
-    const newPosts = await getPosts()
-    this.setState({ posts: [...this.state.posts, ...newPosts] });
-  }
+  useEffect(() => {
+    const newPosts =  getPosts()
+    setPosts( [...posts, ...newPosts] );
+  },[]);
   
-  // ---------- CONEXIÓN CON EL COMPONENTE POST
-  drawPosts = () => {
-    if (this.state.search == "") {
-      // {this.addPost}
-      console.log(this.state.search);
-      return this.state.posts.map((item, i) =>
-          <Post title={item.title} fnBorrar={this.deletePosts} keyy={i} fnEdit={this.editPosts} fnFlag={this.loadPosts} tareaHecha={this.tareaHecha} claseCheck={item.check} editPriority={this.editPriority} statePriority={item.priority} btnEditNewPost={this.btnEditNewPost}/>
+  const drawPosts = () => {
+    if (search == "") {
+      console.log("00", search);
+      console.log("0", posts);
+      return posts.map((item, i) =>
+          <Post title={item.title} fnBorrar={deletePosts} keyy={i} fnEdit={editPosts} tareaHecha={tareaHecha} claseCheck={item.check} editPriority={editPriority} statePriority={item.priority} btnEditNewPost={btnEditNewPost}/>
       )
     }else{
-      return <h1>Estás buscando guay. Solo necesitas escribir la robermagicmap </h1>
+
+      return ( 
+      posts.filter((item) => item.title.toLowerCase().includes(search.toLowerCase())).map(( item, i ) => <Post  title={item.title} fnBorrar={deletePosts} keyy={i} fnEdit={editPosts} tareaHecha={tareaHecha} claseCheck={item.check} editPriority={editPriority} statePriority={item.priority} btnEditNewPost={btnEditNewPost}/>)
+      // <h1>Estás buscando guay. Solo necesitas escribir la robermagicmap </h1> 
+      ) 
     }
     }
       
 // ---------- FUNCIÓN ELIMINAR AL HACER CLIC EN EL BOTON de POST
-  deletePosts = (el) => { 
-          const task = this.state.posts.filter((index, i )=> i !== el);
-          this.setState({posts: task})
+  const deletePosts = (el) => { 
+          const del = posts.filter((index, i )=> i !== el);
+          setPosts(del)
         
       }
       
 // ---------- FUNCIÓN EDITAR AL HACER CLIC EN EL BOTON de POST
-  editPosts = (i, newTitle) => {
-    const newTitles = [...this.state.posts];  // Copy of an array
-    newTitles[i].title = newTitle             // Modificar la copia con la i y el nuevo título
-    this.setState({ posts: newTitles, mode:0})       // Se sustituye el nuevo título
+  const editPosts = (i, newTitle) => {
+    const newTitles = [...posts]; 
+    newTitles[i].title = newTitle            
+    setPosts(newTitles)
+    setMode(0)  
     }
     
     // --------- Tarea hecha, cambio de clase, tacha.
-  tareaHecha = (i) =>{   
-    const newPosts = this.state.posts.map((el, index) => {      // Se hace un map de un array y si el key(i) coincide con el index, se le cambia el estado a check (que está dentro de posts). Se returna el elemento modificado. Y se cambia el estado a este objeto newPosts
+  const tareaHecha = (i) =>{   
+    const newPosts = posts.map((el, index) => {      // Se hace un map de un array y si el key(i) coincide con el index, se le cambia el estado a check (que está dentro de posts). Se returna el elemento modificado. Y se cambia el estado a este objeto newPosts
       if(i == index){
           el.check = !el.check
         }
         return el
       }
       )
-      this.setState({posts: newPosts})                          // Aquí se atribuye el nuevo estado de posts con newPosts
+      setPosts(newPosts)                          // Aquí se atribuye el nuevo estado de posts con newPosts
     }
   
 // ------ Editar la prioridad para que se pinte según prioridad media alta o baja
-  editPriority = (i, statePriority) => {
-      const priority2 = this.state.posts.map((el, index) => {
-        return el.priority
-      })
-      this.setState({ priority: priority2})
+  const editPriority = (i, statePriority) => {
+    const newPost = [...posts]
+    newPost[i].priority = statePriority       
+    setPosts(newPost)
     }
     
-  btnGoBack = () => {
-      this.setState({mode:0})
+  const btnGoBack = () => {
+      setMode(0)
     }
-  btnCreateNewPost = () => {
-      this.setState({mode: 1})
+  const btnCreateNewPost = () => {
+     setMode(1)
     }
-  btnEditNewPost = (id) => {
-      this.setState({mode: 2, selected: id})
+  const btnEditNewPost = (id) => {
+    setMode(2)
+    setSelected(id)
     }
 
-  searchPosts = (el) => this.setState( { search: el.target.value } )
+  const searchPosts = (el) => setSearch( el.target.value )
 
 
-  render() {
-    return (
-       (this.state.mode == 0) ?
+      return (
+       (mode == 0) ?
           <main>
-              <h1>Hola, {this.state.user ? this.state.user : "¡qué pasa Chape!"}</h1>
+              <h1> {usuario ? "Hola" + usuario + ",estas son tus tareas pendientes": "Hola, estas son tus tareas pendientes"}</h1>
               <div className="editLine" >
-                  <input placeholder="  Busca aquí tu contenido..." type="text" value={this.state.posts.search} className="editInput" onChange={this.searchPosts}/> 
+                  <input placeholder="  Busca aquí tu contenido..." type="text" value={posts.search} className="editInput" onChange={searchPosts}/> 
                   {/* <Search searchPosts={this.state.selected, this.state.mode}/>             */}
-                  <div className="btn" onClick={()=> this.btnCreateNewPost()} >Crear nueva</div>
+                  <div className="btn" onClick={()=> btnCreateNewPost()} >Crear nueva</div>
               </div>
-              {this.drawPosts()}    
+              {drawPosts()}    
           </main> 
       : 
-      (this.state.mode == 1) ?
+      (mode == 1) ?
       <main>
             <h1> Crea ahí una tarea como: <br /> ¡Que agsco de React!</h1>
-            <Form btnGoBack={this.btnGoBack} actualMode={this.state.mode} createNewPost={this.createNewPost} addPost={this.addPost} editPosts={this.editPosts} />
+            <Form btnGoBack={btnGoBack} actualMode={mode} addPost={addPost} editPosts={editPosts} />
       </main>
 
     :  
-    (this.state.mode == 2) ?
+    (mode == 2) ?
           <main>
 <             h1>Venga, échale una editadiña ahí</h1>
-                <Form btnGoBack={this.btnGoBack} actualMode={this.state.mode} editPosts={this.editPosts} texto={this.state.posts[this.state.selected].title} keyy={this.state.selected}/> 
+                <Form btnGoBack={btnGoBack} actualMode={mode} editPosts={editPosts} texto={posts[selected].title} keyy={selected}/> 
           </main> 
               : " "
         )  
-      }
-}
+      } 
 
 export default Main;

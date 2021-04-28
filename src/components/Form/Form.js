@@ -1,52 +1,40 @@
 import React from 'react';
 import './Form.css';
+import { useState } from 'react';
 
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      title: this.props.actualMode == 1 ? "" : this.props.texto
-    }
-  }
-
-  handleTitle = event => this.setState({ title: event.target.value })
+const Form = ({ actualMode, texto, addPost, editPosts, keyy, btnGoBack }) => {
   
-  handleNewPost = event => {
+  const [title, setTitle] = useState(actualMode == 1 ? "" : texto)
+
+  const handleTitle = event => setTitle(event.target.value)
+  
+ const handleNewPost = event => {
     event.preventDefault()
-    this.props.addPost(this.state.title)
+    addPost(title)
   }
   
-  editPost = event => {
-    // event.preventDefault()
-    this.props.editPosts(this.props.keyy, this.state.title)
+  const editPost = event => {
+    event.preventDefault()
+    editPosts(keyy, title)
   }
   
- 
-
-  render() {
-    if(this.props.actualMode == 1){
+    if(actualMode == 1){
         return(   
-          <form className="titleLine"> 
-        {/* <div className="btn" onClick={()=> {{this.props.btnGoBack()}; {this.handleNewPost()}}}>Crear tarea</div> */}
-        <input className="editInput" type="text" onChange={this.handleTitle} />
-        <div className="btn" onClick={this.handleNewPost}>Crear tarea</div>
-        <div className="btn" onClick={() => this.props.btnGoBack()}>Volver</div>
-      </form>
+        <form className="titleLine"> 
+            <input className="editInput" type="text" onChange={handleTitle} />
+            <div className="btn" onClick={handleNewPost}>Crear tarea</div>
+            <div className="btn" onClick={() => btnGoBack()}>Volver</div>
+        </form>
      )  
     }else{
       return(   
         <form className="titleLine">
-          <input className="editInput" value={this.state.title} type="text" onChange={this.handleTitle} />
-          <div className="btn" onClick={this.editPost} >Editar tarea</div>
-          <div className="btn" onClick={() => this.props.btnGoBack()}>Volver</div>
-            </form>
-
-            //     RECIBIR EL VALOR DE PADRE   +    RECIBIR EL ID (keyy) / 
+            <input className="editInput" value={title} type="text" onChange={handleTitle} />
+            <div className="btn" onClick={editPost} >Editar tarea</div>
+            <div className="btn" onClick={() => btnGoBack()}>Volver</div>
+        </form>
       )
-    }
-    
-}
+    }   
 }
 
 export default Form;
